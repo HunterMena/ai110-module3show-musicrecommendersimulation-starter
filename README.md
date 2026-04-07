@@ -37,7 +37,17 @@ Genre and energy carry the most weight because they define the broadest and stro
 
 ### Sample Terminal Output
 
-![Terminal output showing top 5 recommendations for the pop/happy profile](screenshot.png)
+**High-Energy Pop**
+
+![High-Energy Pop profile recommendations](highenergy.png)
+
+**Chill Lofi**
+
+![Chill Lofi profile recommendations](chilllofi.png)
+
+**Deep Intense Rock**
+
+![Deep Intense Rock profile recommendations](deepintense.png)
 
 ### Potential Biases
 
