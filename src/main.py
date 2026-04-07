@@ -1,33 +1,34 @@
 """
 Command line runner for the Music Recommender Simulation.
-
-This file helps you quickly run and test your recommender.
-
-You will implement the functions in recommender.py:
-- load_songs
-- score_song
-- recommend_songs
 """
+
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(__file__))
 
 from recommender import load_songs, recommend_songs
 
 
 def main() -> None:
-    songs = load_songs("data/songs.csv") 
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    songs = load_songs(os.path.join(base_dir, "data", "songs.csv"))
 
-    # Starter example profile
     user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
-    print("\nTop recommendations:\n")
-    for rec in recommendations:
-        # You decide the structure of each returned item.
-        # A common pattern is: (song, score, explanation)
-        song, score, explanation = rec
-        print(f"{song['title']} - Score: {score:.2f}")
-        print(f"Because: {explanation}")
-        print()
+    print("\n" + "=" * 45)
+    print("  Top Recommendations for Your Profile")
+    print(f"  Genre: {user_prefs['genre']}  |  Mood: {user_prefs['mood']}  |  Energy: {user_prefs['energy']}")
+    print("=" * 45)
+
+    for i, (song, score, explanation) in enumerate(recommendations, start=1):
+        print(f"\n#{i}  {song['title']} by {song['artist']}")
+        print(f"    Score : {score:.2f} / 7.50")
+        print(f"    Why   : {explanation}")
+
+    print("\n" + "=" * 45)
 
 
 if __name__ == "__main__":

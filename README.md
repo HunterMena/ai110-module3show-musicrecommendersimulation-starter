@@ -17,17 +17,34 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Each song is scored against the user's taste profile, then the top-N results are returned. The `UserProfile` stores a preferred `genre`, `mood`, and numeric targets for energy, valence, tempo, danceability, and acousticness.
 
-Some prompts to answer:
+### Algorithm Recipe
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+```
+genre_match       = 2.0 if song.genre == user.favorite_genre else 0.0
+mood_match        = 1.0 if song.mood  == user.favorite_mood  else 0.0
+energy_score      = 2.0 * (1 - abs(song.energy       - target_energy))
+valence_score     = 1.0 * (1 - abs(song.valence      - target_valence))
+tempo_score       = 0.5 * max(0, 1 - abs(song.tempo_bpm - target_tempo) / 80)
+danceability_score= 0.5 * (1 - abs(song.danceability - target_danceability))
+acousticness_score= 0.5 * (1 - abs(song.acousticness - target_acousticness))
 
-You can include a simple diagram or bullet list if helpful.
+total_score = sum of all above  # max 7.5
+```
+
+Genre and energy carry the most weight because they define the broadest and strongest vibe signals. Mood refines the result. Valence, tempo, danceability, and acousticness act as tiebreakers at 0.5 each.
+
+### Sample Terminal Output
+
+![Terminal output showing top 5 recommendations for the pop/happy profile](screenshot.png)
+
+### Potential Biases
+
+- **Genre dominance** — the 2.0 genre bonus can push a mediocre genre-match above a great cross-genre song that fits the user's mood and energy perfectly.
+- **Mood under-representation** — at 1.0 point, mood is easily outweighed by energy closeness alone.
+- **Catalog skew** — if `songs.csv` has far more songs in one genre, that genre will flood the top-N regardless of fit.
+- **Static taste** — a single fixed profile cannot reflect how a listener's preferences shift by mood, time of day, or context.
 
 ---
 
